@@ -10,7 +10,6 @@ local Keys = {
     ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
--- local QBCore = exports["qb-core"]:GetCoreObject()
 local sharedItems = exports['qbr-core']:GetItems()
 
 local Action = {
@@ -135,6 +134,7 @@ end
 
 function ActionStart()
     runProgThread = true
+    LocalPlayer.state:set("inv_busy", true, true) -- Busy
     Citizen.CreateThread(function()
         while runProgThread do
             if isDoingAction then
@@ -234,6 +234,7 @@ function Cancel()
     TriggerEvent('progressbar:setstatus', false)
     isDoingAction = false
     wasCancelled = true
+    LocalPlayer.state:set("inv_busy", false, true) -- Not Busy
 
     ActionCleanup()
 
@@ -246,6 +247,7 @@ function Finish()
     TriggerEvent('progressbar:setstatus', false)
     isDoingAction = false
     ActionCleanup()
+    LocalPlayer.state:set("inv_busy", false, true) -- Not Busy
 end
 
 function ActionCleanup()
